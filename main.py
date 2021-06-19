@@ -44,7 +44,7 @@ class DiabetesInfoFull(DiabetesInfo):
 
 @app.get('/models')
 async def get_models():
-    files_name = glob.glob("backend/models/*.joblib")
+    files_name = glob.glob("models/*.joblib")
     return [f.split('\\')[1] for f in files_name]
 
 
@@ -63,7 +63,7 @@ async def training(model_name: str, kwargs: dict, data_train: List[DiabetesInfoF
     trained_model = model_class(**kwargs)
     trained_model.fit(X_train, y_train)
     
-    model_name = 'backend/models/' + "diabetes_{}.joblib".format(str(trained_model))
+    model_name = 'models/' + "diabetes_{}.joblib".format(str(trained_model))
     joblib.dump(trained_model, model_name)
     
     y_pred = trained_model.predict(X_test)
@@ -83,7 +83,7 @@ async def predict_diabetes_progress(
     # age, sex, body_mass_index, average_blood_pressure, total_serum_cholesterol, low_density_lipoproteins,
     # high_density_lipoproteins, total_cholesterol, possibly_log_of_serum_triglycerides_level, blood_sugar_level
 
-    model = joblib.load('backend/models/{}'.format(model_name))
+    model = joblib.load('models/{}'.format(model_name))
 
     model_input_data = np.array([age, sex, bmi, bp, s1, s2, s3, s4, s5, s6]).reshape(1, -1)
     progression = model.predict(model_input_data)
@@ -97,7 +97,7 @@ async def predict_diabetes_progress_1(model_name: str, data: List[DiabetesInfo])
     # age, sex, body_mass_index, average_blood_pressure, total_serum_cholesterol, low_density_lipoproteins,
     # high_density_lipoproteins, total_cholesterol, possibly_log_of_serum_triglycerides_level, blood_sugar_level
 
-    model = joblib.load('backend/models/{}'.format(model_name))
+    model = joblib.load('models/{}'.format(model_name))
     model_input_data = pd.DataFrame([d.dict() for d in data])
     
     progression = model.predict(model_input_data)
