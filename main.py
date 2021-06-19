@@ -42,6 +42,10 @@ class DiabetesInfoFull(DiabetesInfo):
     quantitative: float
 
 
+@app.get("/")
+def hello():
+    return {"message":"Hello Sherlock"}
+
 @app.get('/models')
 async def get_models():
     files_name = glob.glob("models/*.joblib")
