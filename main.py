@@ -107,6 +107,39 @@ async def predict_diabetes_progress_1(model_name: str, data: List[DiabetesInfo])
     progression = model.predict(model_input_data)
     return list(progression)
 
+from PIL import Image, ImageDraw
+from io import BytesIO
+import requests    
+
+@app.get('/product_email')
+async def product_email():
+    img = Image.new('RGB', (200, 100), color = (255,255,255))
+    d = ImageDraw.Draw(img)
+
+    title = "Macbook Pro 2021"
+    d.text((20,50), title, fill=(32,32,32))
+
+    price = "123 EUR"
+    d.text((20,70), price, fill=(32,32,32))
+
+
+    url = 'https://cdn.shopify.com/s/files/1/0641/8389/4270/products/apple-macbook-pro-1200__w770.jpg?v=1651500412'
+
+    response = requests.get(url)
+    img1 = Image.open(BytesIO(response.content))
+
+    img1 = img1.resize((200, 200))
+
+
+    dst = Image.new('RGB', (200, 300))
+    dst.paste(img1, (0, 0))
+    dst.paste(img, (0, 200))
+
+    response = HttpResponse(content_type="image/png")
+    dst.save(response, "PNG")
+    return response
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
